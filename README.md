@@ -1,7 +1,7 @@
 # Financial-distress-prediction-TFM-MUCSS
 This repository contains my Master Thesis for the Master's in Computational Social Sciences (UC3M): *Financial distress prediction: a data-driven approach for Spanish companies* . It has all the developed code and a dummy dataset that allows to run it. 
 
-**WARNING!** Since the original data used [CBI-BELab](https://www.bde.es/wbe/es/para-ciudadano/servicios/belab/contenido/microdatos-disponibles/microdatos-de-empresas/microdatos-empresas-individuales-cbi.html) cannot be published, a small sample (primarily anonymized and shuffled) is provided. 
+**WARNING!** Since the original data used [CBI-BELab](https://www.bde.es/wbe/es/para-ciudadano/servicios/belab/contenido/microdatos-disponibles/microdatos-de-empresas/microdatos-empresas-individuales-cbi.html) cannot be published, a small dummy sample (anonymized and shuffled) is provided. 
 Thus, the results obtained with this data are *completely random!*
 
 ## Project structure
