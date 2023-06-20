@@ -17,7 +17,7 @@ matched_sample_knn <- matched_sample_knn %>%
   purrr::discard(~sum(is.na(.x))/length(.x)*100 >=15)
 
 # Select the variables for the model
-model_sample <- matched_sample_knn %>% select(any, distress_one, age , sector , tamest,
+model_sample <- matched_sample_knn %>% select( any, distress_one, age , sector , tamest,
                                                r1_p , r3_p , r4_p, 
                                                e1_p , e2_p , e3_p , 
                                                current_ratio_p , 
@@ -95,29 +95,29 @@ model_sample <- model_sample %>% select(-endebtness1_p)
 #Save the clean data for modeling ----
 save(model_sample, file = "../Datos/imputed_data.RData")
 
-distress_imputed <- model_sample %>% filter(distressed==1 & year ==2019)
-distress_imputed <- distress_imputed %>% select(-year)
 
 #############################################################################################################
 
-# Extract sample for 2019
-library(DataExplorer)
+# Extract sample a full sample for 2019
 full_2019 <- full_sample %>% filter(any == 2019)
 
+# Get those companies not imputed before 
+full_2019 <- full_2019 %>% filter(recovered == 1 | distress_two ==1)
 
-full_2019 <- full_2019 %>% filter(!(is.na(distress_one)))
-
+# Check sample composition
 full_2019 %>% summarise(empresas = n(),
                         emp_distr_t = sum(distress1_c, na.rm = T),
                         emp_distr_t_1 = sum(distress1_p, na.rm = T),
                         emp_dist_tyt_1 = sum(distress_two, na.rm = T),
                         emp_dist_t_no_t_1 = sum(distress_one, na.rm = T),
                         never_distress = sum(no_distress, na.rm = T),
+                        recovered = sum(recovered),
                         P = emp_dist_tyt_1/emp_distr_t,
                         Pno = emp_dist_t_no_t_1/emp_distr_t) %>% 
   as.data.frame()
 
 
+# Select model variables 
 full_2019 <- full_2019 %>% select(any, distress_one, age , sector , tamest,
                                   r1_p , r3_p , r4_p, 
                                   e1_p , e2_p , e3_p , 
@@ -172,16 +172,15 @@ full_2019$distress2_p <- as.factor(full_2019$distress2_p)
 full_2019$distress3_p <- as.factor(full_2019$distress3_p)
 full_2019$distress4_p <- as.factor(full_2019$distress4_p)
 
+# Remove variables which are not in the model sample
+full_2019 <- full_2019 %>% select(-endebtness1_p)
 
-full_2019 <- full_2019 %>% select(-year, -endebtness1_p)
 
 save(full_2019,file = "../Datos/full_2019.RData")
 
-# Join full sample (1 and 0)
+# Join full sample 
+full_2019_imputed <- rbind(model_sample, full_2019)
 
-no_distress_full_2019 <- full_2019 %>% filter(distressed == 0)
-
-full_2019_imputed <- rbind(distress_imputed, no_distress_full_2019)
 
 save(full_2019_imputed,file = "../Datos/full_2019_imputed.RData")
 
